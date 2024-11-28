@@ -73,8 +73,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(registry -> {
-                    registry.requestMatchers("api/auth/signup").permitAll();
+                    registry.requestMatchers("/api/auth/signup").permitAll();
                     registry.requestMatchers("/api/auth/**").permitAll();
+                    registry.requestMatchers("/api/cliente/upload").permitAll(); // Permitir acesso ao endpoint de upload
                     registry.requestMatchers("/api/user/checkUsernameAvailability").permitAll();
                     registry.requestMatchers("/api/user/checkEmailAvailability").permitAll();
                     registry.requestMatchers("/api/users/**").permitAll();
@@ -89,7 +90,7 @@ public class SecurityConfig {
                 })
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
-.sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
