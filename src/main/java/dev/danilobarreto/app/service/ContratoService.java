@@ -1,46 +1,56 @@
 package dev.danilobarreto.app.service;
 
+import com.itextpdf.forms.PdfAcroForm;
 import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Paragraph;
 import dev.danilobarreto.app.model.Cliente;
-import dev.danilobarreto.app.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ContratoService {
 
     @Autowired
-    private ClienteRepository clienteRepository;
+    private JdbcTemplate jdbcTemplate;
 
-    public String gerarContrato(String nomeCliente, String modeloContrato) {
+    public void preencherContrato(Long id, String caminhoPDForiginal, String caminhoPDFpreenchido) throws Exception {
+        String sql = "SELECT * FROM cliente WHERE id = ?";
+        Cliente cliente = jdbcTemplate.queryForObject(sql, new Object[]{id}, (rs, rowNum) -> {
+            Cliente c = new Cliente();
+            c.setId(rs.getLong("id"));
+            c.setCnpjCpf(rs.getString("cnpj_cpf"));
+            c.setRazaoSocial(rs.getString("razao_social"));
+            c.setBairro(rs.getString("bairro"));
+            c.setCidade(rs.getString("cidade"));
+            c.setEstado(rs.getString("estado"));
+            c.setTelefone(rs.getString("telefone"));
+            c.setEmail(rs.getString("email"));
+            c.setCep(rs.getString("cep"));
+            c.setDataInclusao(rs.getDate("data_inclusao").toLocalDate());
+            c.setEndereco(rs.getString("endereco"));
+            return c;
+        });
 
-        Cliente cliente = clienteRepository.findByRazaoSocial(nomeCliente)
-                .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado: " + nomeCliente));
+        PdfReader reader = new PdfReader(caminhoPDForiginal);
+        PdfWriter writer = new PdfWriter(caminhoPDFpreenchido);
+        PdfDocument document = new PdfDocument(reader, writer);
 
+        PdfAcroForm form = PdfAcroForm.getAcroForm(document, true);
 
-        String contratoGerado = modeloContrato
-                .replace("NOME", cliente.getRazaoSocial())
-                .replace("CPF/CNPJ", cliente.getCnpjCpf())
-                .replace("endereço", cliente.getEndereco() != null ? cliente.getEndereco() : "N/D")
-                .replace("bairro", cliente.getBairro() != null ? cliente.getBairro() : "N/D")
-                .replace("cidade/estado", cliente.getCidade() + "/" + cliente.getEstado())
-                .replace("CEP", cliente.getCep() != null ? cliente.getCep() : "N/D")
-                .replace("endereço eletrônico", cliente.getEmail() != null ? cliente.getEmail() : "N/D")
-                .replace("telefone", cliente.getTelefone() != null ? cliente.getTelefone() : "N/D");
+        form.getField("razao-social").setValue(cliente.getRazaoSocial());
+        form.getField("cnpj-cpf").setValue(cliente.getCnpjCpf());
+        form.getField("endereco").setValue(cliente.getEndereco());
+        form.getField("bairro").setValue(cliente.getBairro());
+        form.getField("cidade").setValue(cliente.getCidade());
+        form.getField("estado").setValue(cliente.getEstado());
+        form.getField("cep").setValue(cliente.getCep());
+        form.getField("email").setValue(cliente.getEmail());
+        form.getField("telefone").setValue(cliente.getTelefone());
 
-        return contratoGerado;
-    }
-
-    public void exportarContratoParaPDF(String contratoGerado, String caminhoArquivo) throws Exception {
-        PdfWriter writer = new PdfWriter(caminhoArquivo);
-        PdfDocument pdfDoc = new PdfDocument(writer);
-        Document document = new Document(pdfDoc);
-
-        // Adiciona o conteúdo do contrato ao PDF
-        document.add(new Paragraph(contratoGerado));
         document.close();
     }
+
+
 }
