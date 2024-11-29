@@ -42,8 +42,8 @@ public class ClienteService {
                 cliente.setTelefone(getCellValue(row.getCell(5)));
                 cliente.setEmail(getCellValue(row.getCell(6)));
                 cliente.setCep(getCellValue(row.getCell(7)));
-                cliente.setDataInclusao(LocalDate.parse(getCellValue(row.getCell(8))));
-                cliente.setEndereco(getCellValue(row.getCell(9)));
+                cliente.setEndereco(getCellValue(row.getCell(8)));
+                cliente.setDataInclusao(parseDateFromCell(row.getCell(9)));
 
                 clientes.add(cliente);
             }
@@ -76,4 +76,19 @@ public class ClienteService {
         }
     }
 
+    private LocalDate parseDateFromCell(Cell cell) {
+        if (cell == null || cell.getCellType() != CellType.NUMERIC) {
+            return null;
+        }
+
+        if (DateUtil.isCellDateFormatted(cell)) {
+            return cell.getLocalDateTimeCellValue().toLocalDate();
+        } else {
+            throw new IllegalArgumentException("Formato inválido de data na planilha.");
+        }
+    }
+
+    public List<Cliente> listarClientes() {
+        return clienteRepository.findAll();
+    }
 }

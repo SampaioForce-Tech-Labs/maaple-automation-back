@@ -28,6 +28,10 @@ public class Cliente {
     private String telefone;
     private String email;
     private String cep;
+
+    @Column(name = "data_inclusao")
+    @Temporal(TemporalType.DATE)
     private LocalDate dataInclusao;
+
     private String endereco;
 }
