@@ -1,5 +1,6 @@
 package dev.danilobarreto.app.service;
 
+import ch.qos.logback.core.net.server.Client;
 import dev.danilobarreto.app.model.Cliente;
 import dev.danilobarreto.app.repository.ClienteRepository;
 import org.apache.poi.ss.usermodel.*;
@@ -12,6 +13,7 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClienteService {
@@ -88,5 +90,11 @@ public class ClienteService {
         }
     }
 
+    public List<Cliente> findAllClientes() {
+        return clienteRepository.findAll();
+    }
 
+    public Optional<Cliente> findClienteByRazaoSocial(String razaoSocial) {
+        return clienteRepository.findByRazaoSocial(razaoSocial);
+    }
 }
