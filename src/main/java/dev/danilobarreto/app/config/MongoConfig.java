@@ -13,4 +13,10 @@ public class MongoConfig {
     public GridFSBucket gridFSBucket(MongoClient mongoClient) {
         return GridFSBuckets.create(mongoClient.getDatabase("automatizador"));
     }
+
+    @Bean
+    public dev.danilobarreto.app.model.mongoDB.Contrato contrato() {
+        return new dev.danilobarreto.app.model.mongoDB.Contrato();
+    }
+
 }

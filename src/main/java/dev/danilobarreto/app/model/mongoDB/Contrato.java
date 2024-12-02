@@ -11,7 +11,9 @@ public class Contrato {
     private String id;
     @Setter
     @Getter
+    private String nomeArquivo;
+    @Setter
+    @Getter
     private byte[] conteudoPdf;
-
 
 }
