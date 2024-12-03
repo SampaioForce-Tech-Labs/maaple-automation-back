@@ -9,6 +9,8 @@ import dev.danilobarreto.app.service.DocumentoService;
 import org.apache.commons.compress.utils.IOUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.http.*;
@@ -60,39 +62,25 @@ public class DocumentoController {
             throw new RuntimeException(e);
         }
     }
-
     @GetMapping("/download/{id}")
-    public ResponseEntity<byte[]> downloadDocumento(@PathVariable String id) {
+    public ResponseEntity<byte[]> downloadDocumento(@PathVariable("id") String id) {
         try {
-            if (id.length() != 24 || !ObjectId.isValid(id)) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body("ID de documento inválido".getBytes());
-            }
-
-            // Convertendo o ID para ObjectId
             ObjectId objectId = new ObjectId(id);
-
-            // Busca o arquivo no GridFS usando o ObjectId
-            GridFSFile file = documentoService.buscarDocumentoPorId(String.valueOf(objectId));
+            GridFSFile file = gridFsTemplate.findOne(Query.query(Criteria.where("_id").is(objectId)));
 
             if (file != null) {
-                // Obtém o fluxo de download do GridFS
-                GridFSDownloadStream downloadStream = (GridFSDownloadStream) gridFsTemplate.getResource(file.getId().toString()).getInputStream();
+                GridFsResource resource = gridFsTemplate.getResource(file);
+                InputStream inputStream = resource.getInputStream();
+                byte[] fileContent = IOUtils.toByteArray(inputStream);
 
-                // Converte o conteúdo do arquivo em bytes
-                byte[] fileContent = IOUtils.toByteArray(downloadStream);
-
-                // Retorna o arquivo com os headers adequados
                 return ResponseEntity.ok()
-                        .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
-                        .body(fileContent);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+                    .body(fileContent);
             }
+
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            // Logando erro e retornando Internal Server Error
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
