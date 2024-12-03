@@ -9,9 +9,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Contrato {
     @Id
     private String id;
+
+    @Setter
+    @Getter
+    private String razaoSocialAss;
+
     @Setter
     @Getter
     private String nomeArquivo;
+
     @Setter
     @Getter
     private byte[] conteudoPdf;

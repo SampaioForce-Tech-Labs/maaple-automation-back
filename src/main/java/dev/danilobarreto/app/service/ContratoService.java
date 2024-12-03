@@ -34,6 +34,10 @@ public class ContratoService {
         return contratoRepository.findByNomeArquivo(nomeArquivo);
     }
 
+    public List<Contrato> findContratoByRazaoSocialAss(String razaoSocialAss) {
+        return contratoRepository.findByRazaoSocialAss(razaoSocialAss);
+    }
+
     public void editarContrato(String nomeArquivo, Contrato novoContrato) {
         Contrato contrato = findContratoByName(nomeArquivo);
         if (contrato != null) {

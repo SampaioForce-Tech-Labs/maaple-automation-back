@@ -27,6 +27,12 @@ public class ContratoController {
         }
     }
 
+    @GetMapping("/buscar/{razaoSocialAss}")
+    public ResponseEntity<List<Contrato>> findContratosByRazaoSocial(@RequestParam("razaoSocialAss") String razaoSocialAss) {
+        List<Contrato> contratos = contratoService.findContratoByRazaoSocialAss(razaoSocialAss);
+        return ResponseEntity.ok(contratos);
+    }
+
     @GetMapping("/listar")
     public ResponseEntity<List<Contrato>> listarContratos() {
         List<Contrato> contratos = contratoService.listarContratos();

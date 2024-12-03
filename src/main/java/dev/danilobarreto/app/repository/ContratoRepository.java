@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface ContratoRepository extends MongoRepository<Contrato, String> {
     Contrato findByNomeArquivo(String nomeArquivo);
+
+    List<Contrato> findByRazaoSocialAss(String razaoSocialAss);
 }
