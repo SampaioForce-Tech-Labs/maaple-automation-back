@@ -85,5 +85,20 @@ public class DocumentoController {
         }
     }
 
+    @GetMapping("/buscar/{razaoSocialAss}")
+    public ResponseEntity<List<Map<String, String>>> buscarPorRazaoSocialAss(@PathVariable("razaoSocialAss") String razaoSocialAss) {
+        List<GridFSFile> documentos = documentoService.buscarDocumentosPorRazaoSocialAss(razaoSocialAss);
+
+        List<Map<String, String>> documentosListados = documentos.stream()
+                .map(doc -> {
+                    Map<String, String> docInfo = new HashMap<>();
+                    docInfo.put("id", doc.getId().toString());
+                    docInfo.put("nome", doc.getFilename());
+                    return docInfo;
+                })
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(documentosListados);
+    }
 }
 

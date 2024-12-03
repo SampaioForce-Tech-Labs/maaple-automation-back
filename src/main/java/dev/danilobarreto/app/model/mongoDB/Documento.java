@@ -8,13 +8,14 @@ public class Documento {
 
     @Id
     private String id;
-    private String nome;
+    private String nomeDocumento;
+    private String razaoSocialAss;
     private String tipo;
     private byte[] conteudo;
 
     // Construtores, getters e setters
     public Documento(String nome, String tipo, byte[] conteudo) {
-        this.nome = nome;
+        this.nomeDocumento = nome;
         this.tipo = tipo;
         this.conteudo = conteudo;
     }
@@ -27,12 +28,20 @@ public class Documento {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getNomeDocumento() {
+        return nomeDocumento;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setNomeDocumento(String nomeDocumento) {
+        this.nomeDocumento = nomeDocumento;
+    }
+
+    public String getRazaoSocialAss() {
+        return razaoSocialAss;
+    }
+
+    public void setRazaoSocialAss(String razaoSocialAss) {
+        this.razaoSocialAss = razaoSocialAss;
     }
 
     public String getTipo() {

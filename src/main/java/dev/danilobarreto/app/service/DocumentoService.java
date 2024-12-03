@@ -1,13 +1,10 @@
 package dev.danilobarreto.app.service;
 
-import com.mongodb.client.gridfs.GridFSBucket;
 import com.mongodb.client.gridfs.model.GridFSFile;
-import dev.danilobarreto.app.repository.DocumentoRepository;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
@@ -55,6 +52,13 @@ public class DocumentoService {
     public List<GridFSFile> listarDocumentos() {
         List<GridFSFile> documentos = new ArrayList<>();
         gridFsTemplate.find(Query.query(Criteria.where("filename").exists(true)))
+                .forEach(documentos::add);
+        return documentos;
+    }
+
+    public List<GridFSFile> buscarDocumentosPorRazaoSocialAss(String razaoSocialAss) {
+        List<GridFSFile> documentos = new ArrayList<>();
+        gridFsTemplate.find(Query.query(Criteria.where("razaoSocialAss").is(razaoSocialAss)))
                 .forEach(documentos::add);
         return documentos;
     }
