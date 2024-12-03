@@ -1,39 +1,38 @@
 package dev.danilobarreto.app.model.mongoDB;
 
-import jakarta.persistence.Id;
-import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "documentos")
+@Document
 public class Documento {
 
     @Id
-    private ObjectId id;
-    private String nomeArquivo;
+    private String id;
+    private String nome;
     private String tipo;
-    private long tamanho;
+    private byte[] conteudo;
 
-    public Documento(ObjectId id, String nomeArquivo, String tipo, long tamanho) {
-        this.id = id;
-        this.nomeArquivo = nomeArquivo;
+    // Construtores, getters e setters
+    public Documento(String nome, String tipo, byte[] conteudo) {
+        this.nome = nome;
         this.tipo = tipo;
-        this.tamanho = tamanho;
+        this.conteudo = conteudo;
     }
 
-    public ObjectId getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getNomeArquivo() {
-        return nomeArquivo;
+    public String getNome() {
+        return nome;
     }
 
-    public void setNomeArquivo(String nomeArquivo) {
-        this.nomeArquivo = nomeArquivo;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public String getTipo() {
@@ -44,11 +43,11 @@ public class Documento {
         this.tipo = tipo;
     }
 
-    public long getTamanho() {
-        return tamanho;
+    public byte[] getConteudo() {
+        return conteudo;
     }
 
-    public void setTamanho(long tamanho) {
-        this.tamanho = tamanho;
+    public void setConteudo(byte[] conteudo) {
+        this.conteudo = conteudo;
     }
 }

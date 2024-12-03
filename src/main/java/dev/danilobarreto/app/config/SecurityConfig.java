@@ -75,7 +75,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(registry -> {
                     registry.requestMatchers("/api/auth/signup").permitAll();
                     registry.requestMatchers("/api/auth/**").permitAll();
-                    registry.requestMatchers("/api/cliente/upload").permitAll(); // Permitir acesso ao endpoint de upload
+                    registry.requestMatchers("/documentos/upload").permitAll();
                     registry.requestMatchers("/api/user/checkUsernameAvailability").permitAll();
                     registry.requestMatchers("/api/user/checkEmailAvailability").permitAll();
                     registry.requestMatchers("/api/users/**").permitAll();
