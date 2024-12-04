@@ -2,9 +2,7 @@ package dev.danilobarreto.app.controller;
 
 
 import com.itextpdf.io.exceptions.IOException;
-import com.mongodb.client.gridfs.GridFSDownloadStream;
 import com.mongodb.client.gridfs.model.GridFSFile;
-import dev.danilobarreto.app.model.mongoDB.Documento;
 import dev.danilobarreto.app.service.DocumentoService;
 import org.apache.commons.compress.utils.IOUtils;
 import org.bson.types.ObjectId;
@@ -13,7 +11,10 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -62,6 +63,7 @@ public class DocumentoController {
             throw new RuntimeException(e);
         }
     }
+
     @GetMapping("/download/{id}")
     public ResponseEntity<byte[]> downloadDocumento(@PathVariable("id") String id) {
         try {
@@ -99,6 +101,17 @@ public class DocumentoController {
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(documentosListados);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteDocumento(@PathVariable("id") String id) {
+        try {
+            ObjectId objectId = new ObjectId(id);
+            gridFsTemplate.delete(Query.query(Criteria.where("_id").is(objectId)));
+            return ResponseEntity.ok("Documento deletado com sucesso!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar o documento: " + e.getMessage());
+        }
     }
 }
 

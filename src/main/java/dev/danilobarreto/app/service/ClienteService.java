@@ -1,6 +1,5 @@
 package dev.danilobarreto.app.service;
 
-import ch.qos.logback.core.net.server.Client;
 import dev.danilobarreto.app.model.Cliente;
 import dev.danilobarreto.app.repository.ClienteRepository;
 import org.apache.poi.ss.usermodel.*;
@@ -20,6 +19,11 @@ public class ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
+
+
+    public Optional<Cliente> buscarPorId(Long id) {
+        return clienteRepository.findById(id);
+    }
 
     public void processarPlanilha(MultipartFile file) throws Exception {
         List<Cliente> clientes = new ArrayList<>();
@@ -97,4 +101,6 @@ public class ClienteService {
     public Optional<Cliente> findClienteByRazaoSocial(String razaoSocial) {
         return clienteRepository.findByRazaoSocial(razaoSocial);
     }
+
+
 }

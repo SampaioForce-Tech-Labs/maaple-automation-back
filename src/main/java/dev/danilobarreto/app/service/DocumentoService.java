@@ -1,7 +1,6 @@
 package dev.danilobarreto.app.service;
 
 import com.mongodb.client.gridfs.model.GridFSFile;
-import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,22 +32,6 @@ public class DocumentoService {
     }
 
 
-    public GridFSFile buscarDocumentoPorId(String id) {
-        try {
-            ObjectId objectId = new ObjectId(id);
-
-            GridFSFile file = gridFsTemplate.findOne(new org.springframework.data.mongodb.core.query.Query().addCriteria(org.springframework.data.mongodb.core.query.Criteria.where("_id").is(objectId)));
-
-            if (file != null) {
-                return file;
-            } else {
-                throw new RuntimeException("Documento não encontrado");
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar o documento: " + e.getMessage());
-        }
-    }
-
     public List<GridFSFile> listarDocumentos() {
         List<GridFSFile> documentos = new ArrayList<>();
         gridFsTemplate.find(Query.query(Criteria.where("filename").exists(true)))
@@ -62,4 +45,6 @@ public class DocumentoService {
                 .forEach(documentos::add);
         return documentos;
     }
+
+
 }

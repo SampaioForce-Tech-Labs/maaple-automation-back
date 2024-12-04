@@ -20,6 +20,17 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Cliente> buscarClientePorId(@PathVariable Long id) {
+        Optional<Cliente> cliente = clienteService.buscarPorId(id);
+
+        if (cliente.isPresent()) {
+            return ResponseEntity.ok(cliente.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PostMapping("/upload")
     @Transactional
     public ResponseEntity<String> uploadPlanilha(@RequestParam("file") MultipartFile file) {
@@ -42,4 +53,6 @@ public class ClienteController {
         Optional<Cliente> cliente = clienteService.findClienteByRazaoSocial(razaoSocial);
         return ResponseEntity.ok(cliente);
     }
+
+
 }
