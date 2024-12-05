@@ -26,6 +26,9 @@ public class FuncionarioService {
         return funcionarioRepository.findAll();
     }
 
+    public Funcionario editarFuncionario(Long id) {
+        return funcionarioRepository.findById(id).orElseThrow( () -> new RuntimeException("Funcionário não encontrado"));
+    }
 
     @Transactional
     public void cadastraFuncionario(NewEmployee newEmployee) {
