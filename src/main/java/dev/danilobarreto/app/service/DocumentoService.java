@@ -1,6 +1,7 @@
 package dev.danilobarreto.app.service;
 
 import com.mongodb.client.gridfs.model.GridFSFile;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,5 +47,20 @@ public class DocumentoService {
         return documentos;
     }
 
+    public void atualizarDocumento(MultipartFile file, String id) {
+        ObjectId objectId = new ObjectId(id);
+        GridFSFile existingFile = gridFsTemplate.findOne(Query.query(Criteria.where("_id").is(objectId)));
 
+        if (existingFile != null) {
+            gridFsTemplate.delete(Query.query(Criteria.where("_id").is(objectId)));
+            // Save new document with same ID
+            try {
+                gridFsTemplate.store(file.getInputStream(), file.getContentType());
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to store updated file", e);
+            }
+        } else {
+            throw new RuntimeException("Document not found with id: " + id);
+        }
+    }
 }

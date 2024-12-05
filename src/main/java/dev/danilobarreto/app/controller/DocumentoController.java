@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/documentos")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class DocumentoController {
 
     @Autowired
@@ -101,6 +102,16 @@ public class DocumentoController {
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(documentosListados);
+    }
+
+    @PutMapping(value = "/atualizar/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> atualizarDocumento(@PathVariable("id") String id, @RequestParam("file") MultipartFile file) {
+        try {
+            documentoService.atualizarDocumento(file, id);
+            return ResponseEntity.ok("Documento atualizado com sucesso!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar o documento: " + e.getMessage());
+        }
     }
 
     @DeleteMapping("/delete/{id}")
