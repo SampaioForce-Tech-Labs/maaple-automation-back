@@ -26,7 +26,7 @@ public class FuncionarioService {
         return funcionarioRepository.findAll();
     }
 
-    public Funcionario editarFuncionario(Long id) {
+    public Funcionario listarFuncionarioPorId(Long id) {
         return funcionarioRepository.findById(id).orElseThrow( () -> new RuntimeException("Funcionário não encontrado"));
     }
 
@@ -34,6 +34,9 @@ public class FuncionarioService {
     public void cadastraFuncionario(NewEmployee newEmployee) {
         Funcionario funcionario = new Funcionario(null,
                 newEmployee.nome(),
+                newEmployee.email(),
+                newEmployee.username(),
+                newEmployee.senha(),
                 newEmployee.telefone(),
                 newEmployee.funcao()
         );

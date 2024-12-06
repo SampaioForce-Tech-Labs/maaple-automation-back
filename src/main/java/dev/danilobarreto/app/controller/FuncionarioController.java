@@ -40,10 +40,10 @@ public class FuncionarioController {
         return funcionarioService.listaTodos();
     }
 
-    @GetMapping("/editar/{id}")
+    @GetMapping("/listar/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public Funcionario editarFuncionario(@PathVariable Long id){
-        return funcionarioService.editarFuncionario(id);
+    public Funcionario listarFuncionarioById(@PathVariable Long id){
+        return funcionarioService.listarFuncionarioPorId(id);
     }
 
     @PutMapping("/alterar")

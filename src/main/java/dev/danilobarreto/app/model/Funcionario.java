@@ -2,7 +2,9 @@ package dev.danilobarreto.app.model;
 
 import dev.danilobarreto.app.model.audit.UserDateAudit;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Entity
@@ -21,11 +23,18 @@ public class Funcionario extends UserDateAudit {
     private String nome;
 
     @NotBlank
+    private String username;
+
+    @NotBlank
+    private String email;
+
+    @NotBlank
+    private String senha;
+
+    @NotBlank
     private String telefone;
 
     @Enumerated(EnumType.STRING)
     private Cargo funcao;
-
-    
 
 }

@@ -8,8 +8,10 @@ import jakarta.validation.constraints.NotNull;
 public record NewEmployee (
         @NotBlank
         String nome,
+
         @NotBlank
         String username,
+
         @NotBlank
         @Email
         String email,
@@ -19,6 +21,7 @@ public record NewEmployee (
 
         @NotBlank
         String senha,
+
         @NotNull
         Cargo funcao
 ){
