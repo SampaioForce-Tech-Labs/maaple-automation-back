@@ -124,5 +124,17 @@ public class DocumentoController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar o documento: " + e.getMessage());
         }
     }
+
+    @GetMapping("/fill-pdf")
+    public ResponseEntity<byte[]> fillPdf(@RequestParam MultipartFile file, @RequestParam("razaoSocial") String razaoSocial) {
+        try {
+            byte[] filledPdf = documentoService.preencherDocumento(file, razaoSocial);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(filledPdf);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }
 
